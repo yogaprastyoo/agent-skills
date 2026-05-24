@@ -10,7 +10,7 @@ Each subdirectory is a self-contained skill that the agent loads on demand. Inst
 
 | Skill | Status | What it does |
 |-------|--------|--------------|
-| [`github-git`](./github-git/) | ✅ v1.0.0 | Standardize Git/GitHub workflow — issues, branches, conventional commits, PRs, code review |
+| [`github-git`](./github-git/) | ✅ v1.1.0 | Standardize Git/GitHub workflow — issues, branches, conventional commits, PRs, code review |
 
 ### Coming soon
 
@@ -97,7 +97,7 @@ Skills are immediately updated for all Claude Code sessions.
 Each skill is versioned independently via git tags using the format `<skill-name>-vX.Y.Z`:
 
 ```
-github-git-v1.0.0
+github-git-v1.1.0
 api-response-v1.0.0
 talenthub-mobile-v0.3.0
 ```
