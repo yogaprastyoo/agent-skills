@@ -1,0 +1,361 @@
+---
+name: github-git
+description: >
+  Manages complete GitHub development workflow — from repository setup to release.
+  Use this skill when working with Git or GitHub in any capacity: creating repositories,
+  managing issues, branching, writing commits, creating pull requests, reviewing code,
+  setting up GitHub Actions CI/CD, or managing releases. Trigger on any mention of
+  'git', 'github', 'commit', 'branch', 'merge', 'pull request', 'PR', 'issue',
+  'CI/CD', 'actions', 'workflow', '.gitignore', 'README', 'release', 'tag',
+  'code review', 'changelog', or 'gh cli'. Also trigger when starting new features,
+  fixing bugs, or refactoring code in a Git-managed project.
+---
+
+# GitHub Git Workflow Skill
+
+## Goal
+
+Standardize the complete GitHub development lifecycle:
+
+**Setup → Issue → Branch → Implement → Commit → PR → Review → Merge → Release**
+
+Every piece of work must be traceable — from issue to branch to PR to release.
+
+---
+
+## When To Use
+
+Use this skill when:
+
+- Setting up a new repository
+- Starting a new feature or module
+- Fixing a bug
+- Refactoring code
+- Creating or reviewing pull requests
+- Any task involving Git or GitHub
+
+---
+
+## Prerequisites
+
+- Git installed and configured (`git config --global user.name` / `user.email`)
+- GitHub CLI installed and authenticated (`gh auth login`)
+- Repository initialized or cloned
+
+Verify setup before any workflow:
+
+```bash
+git --version && gh auth status
+```
+
+If `gh` is not authenticated, run `gh auth login` first. Everything else will fail without this.
+
+---
+
+## Core Workflow
+
+Default branch is `develop`. All feature/bugfix branches are created from `develop` and merged back to `develop`. The `main` branch is reserved for production releases only — `develop` is merged into `main` when releasing.
+
+```
+┌─────────────┐
+│  New Task    │
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│ Create Issue │ ← Every task starts here
+└──────┬──────┘
+       ▼
+┌──────────────┐
+│ Create Branch│ ← Branch from develop
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│  Implement   │ ← Follow acceptance criteria
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│   Commit     │ ← Conventional commits
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│  Create PR   │ ← PR into develop
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│ Code Review  │ ← Review checklist
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│    Merge     │ ← Merge into develop
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│   Release    │ ← Merge develop → main, tag + changelog
+└──────────────┘
+```
+
+---
+
+## Core Rules
+
+1. MUST create a GitHub issue before starting any work
+2. MUST create a dedicated branch per issue
+3. MUST use conventional commit format
+4. MUST open a PR into `develop` — never push directly to `develop` or `main`
+5. MUST link PR to its issue (`Closes #N`)
+6. MUST pass CI checks before merging
+
+---
+
+## Decision Tree
+
+### User wants to start a new project
+
+→ Read `references/repo-setup.md`
+→ Initialize repo, .gitignore, README, LICENSE, branch protection
+
+### User wants to start a new feature
+
+→ Create GitHub issue (read `references/issues.md`)
+→ Create branch from issue (read `references/branching-commits.md`)
+→ Implement feature
+→ Commit with conventional format (read `references/branching-commits.md`)
+→ Open PR (read `references/pull-requests.md`)
+
+### User wants to fix a bug
+
+→ Create GitHub issue with bug template (read `references/issues.md`)
+→ Create `bugfix/` branch
+→ Fix bug
+→ Commit → PR → Review → Merge
+
+### User wants to review a PR
+
+→ Read `references/code-review.md`
+→ Follow review checklist
+→ Leave constructive feedback
+
+### User asks about branching strategy
+
+→ Read `references/branching-commits.md`
+→ Recommend based on team size and deploy frequency
+
+---
+
+## Branch Naming Convention
+
+Format:
+
+```
+{prefix}/{issue-number}-{slug}
+```
+
+Prefixes:
+- `feature/` — new features or enhancements
+- `bugfix/` — bug fixes
+- `hotfix/` — urgent production fixes
+- `refactor/` — code refactoring
+- `docs/` — documentation only
+- `ci/` — CI/CD changes
+
+Examples:
+
+```
+feature/42-user-authentication
+bugfix/15-fix-null-pointer-login
+hotfix/78-patch-payment-crash
+```
+
+---
+
+## Commit Message Format
+
+Use **Conventional Commits**:
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `ci`, `perf`
+
+Quick examples:
+
+```
+feat(auth): add JWT refresh token mechanism
+fix(api): handle null response from payment gateway
+docs(readme): add installation instructions
+chore(deps): bump express to 4.19.0
+```
+
+Rules:
+- Imperative mood ("add", not "added")
+- First line max 72 characters
+- Body explains WHY, not WHAT (the diff shows what changed)
+- Reference issue number in footer: `Closes #42`
+
+---
+
+## Gotchas
+
+These are things that frequently go wrong — read before starting:
+
+- **`gh` auth**: `gh issue create` and `gh pr create` silently fail or error if not authenticated. Always verify with `gh auth status` first.
+- **package-lock.json conflicts**: Never resolve manually. Run `npm install` on the target branch after resolving other conflicts, then commit the regenerated lockfile.
+- **Force push to protected branches**: This destroys history for everyone. Branch protection should block this, but if it's not set up yet, never run `git push --force` on `develop` or `main`.
+- **Large files**: Git is not designed for large binary files. If you need to track them, set up Git LFS before committing. Removing large files after commit requires history rewriting (`git filter-branch` or `bfg`).
+- **Secrets in commits**: If credentials are accidentally committed, rotating the secret is the only safe fix. Removing the file in a new commit does NOT remove it from history.
+- **.gitignore timing**: `.gitignore` only affects untracked files. If a file is already tracked, adding it to `.gitignore` won't remove it. Run `git rm --cached <file>` first.
+- **Detached HEAD**: If `git checkout` puts you in detached HEAD, you're on a commit, not a branch. Create a branch with `git checkout -b <branch-name>` before making changes.
+- **Merge vs Rebase**: Use merge for shared branches (preserves history). Use rebase for local cleanup before PR (cleaner history). Never rebase commits that others have pulled.
+
+---
+
+## Constraints
+
+- Do NOT implement without creating an issue first
+- Do NOT skip branch creation — never commit directly on `develop` or `main`
+- Do NOT mix multiple features in one branch
+- Do NOT ignore acceptance criteria in the issue
+- Do NOT merge without CI passing
+- Do NOT force push to shared branches
+
+## API Response in Issues — Mandatory
+
+When creating an issue for a backend endpoint (any endpoint that returns a response), the issue body MUST include an `## API Response` section with request and response examples.
+
+All examples MUST follow the `api-response` skill (`~/.agents/skills/api-response/SKILL.md`):
+
+```json
+// Success
+{ "success": true, "message": "...", "data": {} }
+
+// Error
+{ "success": false, "message": "...", "errors": null }
+```
+
+Rules:
+- Include one example per endpoint in the issue
+- Show both success and all relevant error responses
+- For list endpoints, include `pagination` inside `data`
+- Do NOT invent custom response formats — always follow the api-response skill
+- Place `## API Response` section between `## Context` and `## Acceptance Criteria`
+
+If the project has project-specific additions to the response format (e.g. a `code` field for auth), check the project's Technical Document first before writing the response examples.
+
+## PR and Issue Descriptions — Strict Rules
+
+NEVER include any of the following in PR body, issue body, commit messages, or any GitHub content:
+- `🤖 Generated with Claude Code`
+- `Co-Authored-By: Claude`
+- Any mention of Claude, AI, or automation tools
+
+This applies to **all** Git and GitHub output: commit messages, PR titles, PR bodies, issue bodies, comments, and release notes.
+
+Only use the template from `assets/pr-template.md` and `assets/issue-template-*.md`. No additions outside the template.
+
+---
+
+## Push to Main — Mandatory Warning
+
+If the user is on branch `main` and about to push (or asks to push to `main`), STOP and ask the user (in Indonesian — user-facing prompt):
+
+> "Kamu sedang di branch `main`. Push langsung ke `main` melanggar workflow — perubahan seharusnya masuk lewat PR dari `develop`.
+>
+> Apakah kamu yakin ingin push langsung ke `main`? (ini hanya boleh dilakukan saat release)"
+
+Only proceed if the user explicitly confirms. After confirmation, remind them:
+
+> - Branch protection mungkin menolak push ini jika `enforce_admins` aktif
+> - Untuk private repo gratisan, branch protection tidak tersedia — lebih penting untuk disiplin manual
+> - Cara yang benar: push ke `develop` atau buat PR
+
+---
+
+## Anti-Patterns
+
+### Direct Implementation (no issue)
+
+```
+# BAD: started coding without creating an issue
+git checkout -b feature/something
+# start coding...
+```
+
+→ Always create an issue first for traceability.
+
+### Committing on Develop/Main
+
+```
+# BAD: committing directly on develop or main
+git add . && git commit -m "add feature"
+git push origin develop
+```
+
+→ Always work on a feature branch and open a PR into `develop`.
+
+### Vague Commits
+
+```
+# BAD
+git commit -m "fix stuff"
+git commit -m "update"
+git commit -m "wip"
+```
+
+→ Use conventional commit format with clear scope and description.
+
+### Monster PR
+
+```
+# BAD: PR with 50 files changed, 3000+ lines
+```
+
+→ Keep PRs small and focused. One issue = one branch = one PR.
+
+### Skipping Review
+
+```
+# BAD: merging without any review
+gh pr merge --auto
+```
+
+→ Every PR should be reviewed, even in solo projects (self-review).
+
+---
+
+## Reference Files
+
+Read the appropriate reference file based on the task:
+
+| Task | Reference File |
+|------|---------------|
+| Setting up a new repository | `references/repo-setup.md` |
+| Creating and managing issues | `references/issues.md` |
+| Branching strategy & commits | `references/branching-commits.md` |
+| Creating pull requests | `references/pull-requests.md` |
+| Reviewing code | `references/code-review.md` |
+
+## Asset Templates
+
+Ready-to-use templates are available in `assets/`:
+
+| Template | File |
+|----------|------|
+| Feature issue template | `assets/issue-template-feature.md` |
+| Bug report template | `assets/issue-template-bug.md` |
+| Pull request template | `assets/pr-template.md` |
+| README template | `assets/readme-template.md` |
+
+## Available Scripts
+
+Automation scripts in `scripts/`:
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/create-issue.sh` | Create GitHub issue via gh CLI |
+| `scripts/setup-repo.sh` | Initialize repo with best practices |
+| `scripts/validate-commit-msg.sh` | Validate conventional commit format |

@@ -1,0 +1,32 @@
+# --- Skills not yet ready for public release ---
+# These skills exist locally but are excluded from the public repo for now.
+# Remove the relevant line when ready to publish.
+api-response/
+talenthub-mobile/
+talenthub-backend/
+refactor-flutter/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Editor / IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs & temp
+*.log
+*.tmp
+*.bak
+*~
+
+# Local-only skill drafts / experiments
+_draft/
+_experiments/
+
+# Backup directories created by symlink migrations
+*.bak-*
