@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# .git/hooks/pre-push
+#
+# Git-level pre-push hook. Refuses to push commits directly to
+# `main` or `master`, enforcing the team's PR-via-develop workflow.
+#
+# git passes refs to push on stdin, one per line:
+#   <local ref> <local sha> <remote ref> <remote sha>
+#
+# We block when <remote ref> is refs/heads/main or refs/heads/master.
+
+set -euo pipefail
+
+REMOTE="${1:-}"
+REMOTE_URL="${2:-}"
+
+PROTECTED='^(refs/heads/main|refs/heads/master)$'
+BLOCKED=0
+
+while IFS=' ' read -r LOCAL_REF LOCAL_SHA REMOTE_REF REMOTE_SHA; do
+  # An empty line or end-of-input.
+  [ -z "$REMOTE_REF" ] && continue
+
+  # Branch deletions are allowed (you may need to delete a stale main mirror).
+  if [ "$LOCAL_SHA" = "0000000000000000000000000000000000000000" ]; then
+    continue
+  fi
+
+  if [[ "$REMOTE_REF" =~ $PROTECTED ]]; then
+    BLOCKED=1
+    cat >&2 <<EOF
+[pre-push] BLOCKED
+
+Direct push to $REMOTE_REF is not allowed.
+
+The github-git workflow requires production branches (main/master) to
+receive changes through a PR from develop or a release/hotfix branch.
+
+If you really need to push (e.g. release with the proper release branch
+already merged), bypass the hook temporarily:
+
+  git push --no-verify $REMOTE $LOCAL_REF:$REMOTE_REF
+
+Remote URL: $REMOTE_URL
+EOF
+  fi
+done
+
+exit "$BLOCKED"

@@ -363,6 +363,21 @@ The 5 commands above are defined as self-contained playbooks in `commands/`. Rea
 
 ---
 
+## Hooks (defense-in-depth)
+
+Two layers of automation enforce the workflow even when Claude (or a human) tries to take a shortcut:
+
+| Layer | Where | What it catches |
+|-------|-------|-----------------|
+| **Claude Code hooks** (in `hooks/`) | PreToolUse on Bash | Direct push to `main`/`master`, malformed commit messages from `git commit -m` |
+| **Git hooks** (in `hooks/git-hooks/`) | `commit-msg`, `pre-push` per repo | Any commit/push via plain `git` (terminal, IDE, other tools) |
+
+Both layers are optional but recommended. See [`hooks/README.md`](hooks/README.md) for install steps and the exact rules each hook enforces.
+
+When the user (or Claude) hits a hook block, the hook prints the reason to stderr and explains how to fix it. Do not suggest `--no-verify` unless the situation truly warrants it.
+
+---
+
 ## Reference Files
 
 Read the appropriate reference file based on the task:
@@ -395,3 +410,5 @@ Automation scripts in `scripts/`:
 | `scripts/create-issue.sh` | Create GitHub issue via gh CLI |
 | `scripts/setup-repo.sh` | Initialize repo with best practices |
 | `scripts/validate-commit-msg.sh` | Validate conventional commit format |
+| `scripts/install-git-hooks.sh` | Install `commit-msg` + `pre-push` hooks into the current repo |
+| `scripts/verify-install.sh` | Sanity-check that the skill and its dependencies are installed |

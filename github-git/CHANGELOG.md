@@ -15,9 +15,22 @@ and this skill adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 - Decision Tree updated to route through the new commands
 - README install instructions now include the `~/.claude/commands/` symlink step
 - README "Quick start" split into slash-commands and natural-language sections
+- Claude Code hooks in `hooks/`:
+  - `guard-push-to-main.sh` — PreToolUse hook blocking direct push to `main`/`master`
+  - `commit-msg-validator.sh` — PreToolUse hook enforcing Conventional Commits + 72-char subject + no-vague-words
+  - `settings.example.json` — drop-in snippet for `~/.claude/settings.json`
+- Git-level hooks in `hooks/git-hooks/`:
+  - `commit-msg` — wraps `scripts/validate-commit-msg.sh` (catches heredoc/`-F` commits the Claude hook can't inspect)
+  - `pre-push` — refuses pushes to `refs/heads/main` / `refs/heads/master`
+- `hooks/README.md` — explains both layers, install steps, troubleshooting
+- New scripts:
+  - `scripts/install-git-hooks.sh` — symlink/copy git hooks into the current repo; supports `--copy` and `--uninstall`
+  - `scripts/verify-install.sh` — checks git/gh/jq/skill files/hooks/commands and reports pass/fail/warn
+- README hooks install section (Claude hooks + git hooks + verify-install command)
+- "Hooks (defense-in-depth)" section in `SKILL.md`
+- Structure tree in README extended with `hooks/`, `install-git-hooks.sh`, `verify-install.sh`
 
 ### Planned
-- Hooks: `guard-push-to-main`, `commit-msg-validator`
 - References: `troubleshooting.md`, `advanced-operations.md`
 - Custom subagents: `commit-writer`, `pr-reviewer`, `issue-writer`
 - Example walkthroughs and cheatsheet

@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# .git/hooks/commit-msg
+#
+# Git-level commit-msg hook. Runs the github-git skill's
+# validate-commit-msg.sh against the commit message file that git
+# passes as $1.
+#
+# Install via:
+#   bash ~/.agents/skills/github-git/scripts/install-git-hooks.sh
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+
+# Resolve the validator location. Prefer the symlinked skill path; fall
+# back to the repo path used during development.
+VALIDATOR=""
+for candidate in \
+  "$HOME/.claude/skills/github-git/scripts/validate-commit-msg.sh" \
+  "$HOME/.agents/skills/github-git/scripts/validate-commit-msg.sh"; do
+  if [ -x "$candidate" ]; then
+    VALIDATOR="$candidate"
+    break
+  fi
+done
+
+if [ -z "$VALIDATOR" ]; then
+  cat >&2 <<'EOF'
+[commit-msg] ERROR: validate-commit-msg.sh not found.
+
+Reinstall git hooks with the correct skill path, or remove this hook:
+  rm .git/hooks/commit-msg
+EOF
+  exit 1
+fi
+
+# validate-commit-msg.sh accepts --file <path> and exits non-zero with an
+# error message on stdout if validation fails.
+exec "$VALIDATOR" --file "$COMMIT_MSG_FILE"

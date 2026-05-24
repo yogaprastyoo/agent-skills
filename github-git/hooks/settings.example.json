@@ -1,0 +1,20 @@
+{
+  "_comment": "Example snippet for ~/.claude/settings.json — merge this into your existing settings file. Replace $HOME with your actual home path if needed; the harness expands $HOME automatically.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.agents/skills/github-git/hooks/guard-push-to-main.sh"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.agents/skills/github-git/hooks/commit-msg-validator.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
