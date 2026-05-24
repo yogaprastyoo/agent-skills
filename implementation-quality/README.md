@@ -45,6 +45,21 @@ None directly. The skill is pure guidance — no scripts, no hooks. It complemen
 
 ---
 
+## Compatibility
+
+Supports **four** AI coding agents — see the [Compatibility matrix](../README.md#compatibility) in the root README:
+
+| Agent | Status |
+|-------|--------|
+| Claude Code | ✅ Native (SKILL.md auto-loads) |
+| Antigravity CLI (Gemini) | ✅ Native (same SKILL.md format) |
+| GPT Codex CLI | ✅ Via `AGENTS.md` — `bash ~/agent-skills/scripts/export-to-agent.sh codex implementation-quality > AGENTS.md` |
+| OpenCode | ✅ Via `AGENTS.md` — `bash ~/agent-skills/scripts/export-to-agent.sh opencode implementation-quality > AGENTS.md` |
+
+The instructions below assume Claude Code / Antigravity. For Codex / OpenCode, run the export command and place the generated `AGENTS.md` at your project root.
+
+---
+
 ## Install
 
 Same pattern as the rest of [`agent-skills`](https://github.com/yogaprastyoo/agent-skills):

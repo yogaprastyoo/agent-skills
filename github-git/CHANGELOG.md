@@ -9,6 +9,9 @@ and this skill adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+### Added
+- README "Compatibility" section explaining cross-agent support (Claude Code, Antigravity CLI, GPT Codex CLI, OpenCode). Links to the root `scripts/export-to-agent.sh` for non-native agents.
+
 ### Changed
 - `references/branching-commits.md` "Creating a Branch" — now requires branching from `origin/<base>`, not local `<base>`. Recommends `git fetch && git checkout -b <branch> origin/<base>` or two-step with `git pull --ff-only` (which fails loudly if local has unpushed commits).
 - `references/branching-commits.md` "Guidelines" — first item updated to say "Always branch from **`origin/develop`** (not local `develop`)".

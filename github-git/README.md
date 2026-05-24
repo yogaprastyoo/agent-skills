@@ -38,6 +38,21 @@ gh auth login
 
 ---
 
+## Compatibility
+
+Supports **four** AI coding agents — see the [Compatibility matrix](../README.md#compatibility) in the root README for full details:
+
+| Agent | Status |
+|-------|--------|
+| Claude Code | ✅ Native (slash commands + hooks work fully) |
+| Antigravity CLI (Gemini) | ✅ Native — SKILL.md read directly; slash commands & hooks not yet validated |
+| GPT Codex CLI | ✅ Via `AGENTS.md` — `bash ~/agent-skills/scripts/export-to-agent.sh codex github-git > AGENTS.md` |
+| OpenCode | ✅ Via `AGENTS.md` — `bash ~/agent-skills/scripts/export-to-agent.sh opencode github-git > AGENTS.md` |
+
+The rest of the install instructions below assume Claude Code. For other agents, follow the export command above and place the generated `AGENTS.md` at your project root.
+
+---
+
 ## Install
 
 This skill lives inside a [multi-skill repo](../README.md). Two-step install — the skill itself plus its slash commands:
