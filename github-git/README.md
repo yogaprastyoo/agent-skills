@@ -40,21 +40,28 @@ gh auth login
 
 ## Install
 
-This skill lives inside a [multi-skill repo](../README.md). To install only this skill:
+This skill lives inside a [multi-skill repo](../README.md). Two-step install — the skill itself plus its slash commands:
 
 ```bash
 # 1. Clone the skills repo (if not already)
 git clone https://github.com/yogaprastyoo/agent-skills.git ~/agent-skills
 
-# 2. Symlink this skill into your Claude skills folder
+# 2. Symlink the skill into your Claude skills folder
 mkdir -p ~/.claude/skills
 ln -s ~/agent-skills/github-git ~/.claude/skills/github-git
 
-# 3. Verify
+# 3. Symlink the slash commands into your Claude commands folder
+mkdir -p ~/.claude/commands
+for cmd in ~/agent-skills/github-git/commands/*.md; do
+  ln -sf "$cmd" ~/.claude/commands/
+done
+
+# 4. Verify
 ls ~/.claude/skills/github-git/SKILL.md
+ls ~/.claude/commands/git-*.md
 ```
 
-Or symlink the **entire** repo as your skills folder (recommended if you want all included skills):
+Or symlink the **entire** repo as your skills folder (skills only — commands still need step 3):
 
 ```bash
 # Backup existing skills folder if any
@@ -64,7 +71,7 @@ mv ~/.claude/skills ~/.claude/skills.bak 2>/dev/null
 ln -s ~/agent-skills ~/.claude/skills
 ```
 
-Restart Claude Code. The skill will appear in the available-skills list and auto-trigger on any Git/GitHub keyword.
+Restart Claude Code. The skill will appear in the available-skills list and auto-trigger on any Git/GitHub keyword. The slash commands appear in the `/` menu.
 
 ---
 
@@ -79,25 +86,39 @@ If Claude responds with the workflow phases (`setup → issue → branch → com
 
 ## Quick start
 
-### Create a new issue
+Two ways to invoke: explicit slash commands (recommended for teams) or natural-language prompts.
+
+### Slash commands
+
+| Command | What it does |
+|---------|--------------|
+| `/git-issue [type:] <title>` | Create a GitHub issue following the team template |
+| `/git-commit [scope]` | Analyze diff, auto-detect type, create conventional commit |
+| `/git-pr [--draft]` | Open PR from current branch with auto-detected base & title |
+| `/git-review <pr-number>` | Review a PR using the checklist; post inline comments |
+| `/git-setup <repo-name>` | Bootstrap a new repo with team defaults |
+
+See [`commands/`](./commands/) for full playbooks.
+
+### Natural language (auto-triggered)
+
+Without slash commands, the skill triggers on any Git/GitHub keyword:
+
 > "Buatin issue feature untuk endpoint POST /api/users yang return JWT token"
 
-Claude will produce a complete issue body following the required template (Description, Context, API Response, Acceptance Criteria, Technical Notes), then run `gh issue create`.
+→ Claude generates a complete issue body following the required template, then runs `gh issue create`.
 
-### Commit current changes
 > "Commit perubahan ini"
 
-Claude will analyze your diff, auto-detect the commit type, and generate a conventional commit message.
+→ Claude analyzes your diff, auto-detects the commit type, and generates a conventional commit message.
 
-### Create a PR
 > "Buatin PR untuk branch ini"
 
-Claude will detect the base branch from your branch prefix, pull the linked issue title, fill the PR template, and run `gh pr create`.
+→ Claude detects the base branch from your branch prefix, pulls the linked issue title, fills the PR template, and runs `gh pr create`.
 
-### Review a PR
 > "Review PR #42"
 
-Claude will read the linked issue, walk through the review checklist (correctness, security, performance, tests, etc.), and post inline comments via `gh pr review`.
+→ Claude reads the linked issue, walks through the review checklist (correctness, security, performance, tests), and posts a review via `gh pr review`.
 
 ---
 
@@ -108,6 +129,12 @@ github-git/
 ├── SKILL.md                    # Skill entry point (loaded by Claude)
 ├── README.md                   # This file
 ├── CHANGELOG.md                # Version history
+├── commands/                   # Slash commands (symlink into ~/.claude/commands/)
+│   ├── git-issue.md
+│   ├── git-commit.md
+│   ├── git-pr.md
+│   ├── git-review.md
+│   └── git-setup.md
 ├── references/                 # Detailed playbooks Claude reads on demand
 │   ├── repo-setup.md           # Init repo with best practices
 │   ├── issues.md               # Issue templates & rules

@@ -107,33 +107,55 @@ Default branch is `develop`. All feature/bugfix branches are created from `devel
 
 ---
 
+## Available Commands
+
+For explicit, repeatable workflows, prefer the slash commands shipped with this skill:
+
+| Command | Purpose |
+|---------|---------|
+| `/git-issue` | Create a GitHub issue following the team template (Description, Context, API Response, Acceptance Criteria) |
+| `/git-commit` | Analyze the current diff, auto-detect the commit type, and create a conventional commit |
+| `/git-pr` | Open a PR from the current branch with auto-detected base, title, and labels |
+| `/git-review` | Review a PR by number or URL using the checklist (correctness, security, performance, tests) |
+| `/git-setup` | Initialize a new repository with `develop` default, stack-appropriate `.gitignore`, README, LICENSE, branch protection |
+
+Each command is a self-contained playbook in `commands/` that reads the relevant reference file on demand. The commands enforce the same conventions as keyword-triggered usage — they're just more discoverable for the team.
+
+---
+
 ## Decision Tree
 
 ### User wants to start a new project
 
-→ Read `references/repo-setup.md`
-→ Initialize repo, .gitignore, README, LICENSE, branch protection
+→ Use `/git-setup` (or read `references/repo-setup.md` for full detail)
+
+### User wants to create an issue
+
+→ Use `/git-issue` (or read `references/issues.md` for the template)
 
 ### User wants to start a new feature
 
-→ Create GitHub issue (read `references/issues.md`)
+→ `/git-issue` to file the issue
 → Create branch from issue (read `references/branching-commits.md`)
 → Implement feature
-→ Commit with conventional format (read `references/branching-commits.md`)
-→ Open PR (read `references/pull-requests.md`)
+→ `/git-commit` to commit with conventional format
+→ `/git-pr` to open a PR
 
 ### User wants to fix a bug
 
-→ Create GitHub issue with bug template (read `references/issues.md`)
-→ Create `bugfix/` branch
-→ Fix bug
-→ Commit → PR → Review → Merge
+→ `/git-issue` (type: `fix`) → branch `bugfix/<n>-<slug>` → fix → `/git-commit` → `/git-pr`
+
+### User wants to commit current changes
+
+→ Use `/git-commit` (auto-detects type, generates conventional message)
+
+### User wants to open a PR
+
+→ Use `/git-pr` (auto-detects base branch, derives title from linked issue)
 
 ### User wants to review a PR
 
-→ Read `references/code-review.md`
-→ Follow review checklist
-→ Leave constructive feedback
+→ Use `/git-review <pr-number>` (or read `references/code-review.md`)
 
 ### User asks about branching strategy
 
@@ -324,6 +346,20 @@ gh pr merge --auto
 ```
 
 → Every PR should be reviewed, even in solo projects (self-review).
+
+---
+
+## Slash Command Playbooks
+
+The 5 commands above are defined as self-contained playbooks in `commands/`. Read the playbook to understand exactly what each command will do:
+
+| Command | Playbook |
+|---------|----------|
+| `/git-issue` | `commands/git-issue.md` |
+| `/git-commit` | `commands/git-commit.md` |
+| `/git-pr` | `commands/git-pr.md` |
+| `/git-review` | `commands/git-review.md` |
+| `/git-setup` | `commands/git-setup.md` |
 
 ---
 

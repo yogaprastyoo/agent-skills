@@ -9,8 +9,14 @@ and this skill adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+### Added
+- Slash commands in `commands/` — `/git-issue`, `/git-commit`, `/git-pr`, `/git-review`, `/git-setup`
+- "Available Commands" and "Slash Command Playbooks" sections in `SKILL.md`
+- Decision Tree updated to route through the new commands
+- README install instructions now include the `~/.claude/commands/` symlink step
+- README "Quick start" split into slash-commands and natural-language sections
+
 ### Planned
-- Slash commands: `/git-issue`, `/git-pr`, `/git-commit`, `/git-review`, `/git-setup`
 - Hooks: `guard-push-to-main`, `commit-msg-validator`
 - References: `troubleshooting.md`, `advanced-operations.md`
 - Custom subagents: `commit-writer`, `pr-reviewer`, `issue-writer`
