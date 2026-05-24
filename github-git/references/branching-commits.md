@@ -72,18 +72,36 @@ my-branch                      # No prefix, no issue number
 
 ### Creating a Branch
 
-Always start from the latest `develop`:
+Always branch from **`origin/develop`**, not local `develop`. This prevents silently absorbing unpushed local commits into your feature branch (see Gotcha: "Silent absorption of unpushed local commits" below).
+
+Recommended one-liner:
 
 ```bash
+git fetch origin && git checkout -b feature/<issue-number>-<slug> origin/develop
+```
+
+Or in two steps if you prefer:
+
+```bash
+git fetch origin
 git checkout develop
-git pull origin develop
+git pull --ff-only origin develop      # fail loudly if local develop has its own commits
 git checkout -b feature/<issue-number>-<slug>
 ```
+
+The `--ff-only` is the key safety net — it refuses a non-fast-forward pull, which is the signal that you have unpushed local commits on `develop` that need to be handled (pushed via PR) before creating a new branch.
 
 Verify you are on the correct branch:
 
 ```bash
 git branch --show-current
+```
+
+And verify the branch base matches `origin/develop`:
+
+```bash
+git rev-parse HEAD == git rev-parse origin/develop
+# (or: git log origin/develop..HEAD — should be empty before you make any commits)
 ```
 
 ### Working on a Branch
@@ -337,7 +355,7 @@ Do NOT create separate commits for each file unless they represent independent c
 
 ## Guidelines
 
-- Always branch from `develop` (except hotfixes which branch from `main`)
+- Always branch from **`origin/develop`** (not local `develop`) — except hotfixes which branch from `origin/main`
 - Keep branches short-lived — merge within a few days, not weeks
 - Rebase regularly to stay up-to-date with `develop`
 - Use `--force-with-lease` instead of `--force` when pushing after rebase
@@ -355,3 +373,4 @@ Do NOT create separate commits for each file unless they represent independent c
 - **Branch from wrong base**: If you accidentally branch from `main` instead of `develop`, your PR will show all the diff between `main` and `develop`. Recreate the branch from `develop`.
 - **Commit amend after push**: `git commit --amend` followed by `git push` will fail because history changed. Use `git push --force-with-lease` after amending, but only on your own branch.
 - **Empty commits**: If you need to re-trigger CI without code changes, use `git commit --allow-empty -m "ci: re-trigger pipeline"`.
+- **Silent absorption of unpushed local commits**: If you branch from local `develop` (instead of `origin/develop`) while local has commits that haven't been pushed yet, those commits get inherited by your new feature branch. When the PR is squash-merged, GitHub's combined diff includes BOTH your intended changes AND the inherited local-only changes — silently absorbing them under your PR's title. Symptoms: you open a "small" PR that suddenly contains code you don't recognize; or another person's recent work appears as part of your PR. Prevention: always `git fetch && git checkout -b <branch> origin/<base>` (or use `git pull --ff-only` which fails loudly if local is ahead). To check before pushing: `git log origin/<base>..<your-branch> --not <your-commits-only>` should be empty. This is enforced as a pre-PR check in `/git-pr`.
