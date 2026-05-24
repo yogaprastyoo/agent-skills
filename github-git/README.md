@@ -73,6 +73,40 @@ ln -s ~/agent-skills ~/.claude/skills
 
 Restart Claude Code. The skill will appear in the available-skills list and auto-trigger on any Git/GitHub keyword. The slash commands appear in the `/` menu.
 
+### Optional — install hooks (defense-in-depth)
+
+The skill ships two hook layers that prevent direct pushes to `main` and reject malformed commit messages. Both are opt-in.
+
+**Claude Code hooks** (catch what Claude tries to do):
+
+```bash
+# Merge this into ~/.claude/settings.json — see hooks/settings.example.json
+{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash",
+      "hooks": [
+        { "type": "command", "command": "$HOME/.agents/skills/github-git/hooks/guard-push-to-main.sh" },
+        { "type": "command", "command": "$HOME/.agents/skills/github-git/hooks/commit-msg-validator.sh" }
+      ]
+    }]
+  }
+}
+```
+
+**Git hooks** (catch what humans do at the terminal — install per repo):
+
+```bash
+cd /path/to/your/repo
+bash ~/agent-skills/github-git/scripts/install-git-hooks.sh
+```
+
+**Verify the whole stack at any time:**
+
+```bash
+bash ~/agent-skills/github-git/scripts/verify-install.sh
+```
+
 ---
 
 ## Verify install
@@ -135,6 +169,14 @@ github-git/
 │   ├── git-pr.md
 │   ├── git-review.md
 │   └── git-setup.md
+├── hooks/                      # Automation hooks
+│   ├── README.md               # Hook layers explained
+│   ├── guard-push-to-main.sh   # Claude Code PreToolUse hook
+│   ├── commit-msg-validator.sh # Claude Code PreToolUse hook
+│   ├── settings.example.json   # Snippet for ~/.claude/settings.json
+│   └── git-hooks/              # Per-repo git hooks (installed via script)
+│       ├── commit-msg
+│       └── pre-push
 ├── references/                 # Detailed playbooks Claude reads on demand
 │   ├── repo-setup.md           # Init repo with best practices
 │   ├── issues.md               # Issue templates & rules
@@ -149,7 +191,9 @@ github-git/
 └── scripts/                    # Helper scripts
     ├── create-issue.sh
     ├── setup-repo.sh
-    └── validate-commit-msg.sh
+    ├── validate-commit-msg.sh
+    ├── install-git-hooks.sh    # Wire git hooks into a repo
+    └── verify-install.sh       # Sanity-check the install
 ```
 
 ---
