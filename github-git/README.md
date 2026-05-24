@@ -160,15 +160,21 @@ Without slash commands, the skill triggers on any Git/GitHub keyword:
 
 ```
 github-git/
-├── SKILL.md                    # Skill entry point (loaded by Claude)
+├── SKILL.md                    # Skill entry point (loaded by the agent runtime)
 ├── README.md                   # This file
-├── CHANGELOG.md                # Version history
+├── CHANGELOG.md                # Version history (Keep a Changelog format)
+├── CHEATSHEET.md               # One-page printable quick reference
+├── plugin.json                 # Plugin manifest (commands, agents, hooks, refs)
 ├── commands/                   # Slash commands (symlink into ~/.claude/commands/)
 │   ├── git-issue.md
 │   ├── git-commit.md
 │   ├── git-pr.md
 │   ├── git-review.md
 │   └── git-setup.md
+├── agents/                     # Focused subagents (invoke via Agent tool)
+│   ├── commit-writer.md
+│   ├── pr-reviewer.md
+│   └── issue-writer.md
 ├── hooks/                      # Automation hooks
 │   ├── README.md               # Hook layers explained
 │   ├── guard-push-to-main.sh   # Claude Code PreToolUse hook
@@ -177,17 +183,24 @@ github-git/
 │   └── git-hooks/              # Per-repo git hooks (installed via script)
 │       ├── commit-msg
 │       └── pre-push
-├── references/                 # Detailed playbooks Claude reads on demand
+├── references/                 # Detailed playbooks the agent reads on demand
 │   ├── repo-setup.md           # Init repo with best practices
 │   ├── issues.md               # Issue templates & rules
+│   ├── issues-api-response.md  # API Response envelope for endpoint issues
 │   ├── branching-commits.md    # Branch naming + conventional commits
 │   ├── pull-requests.md        # PR creation, self-review, merge strategy
-│   └── code-review.md          # Review checklist & feedback patterns
+│   ├── code-review.md          # Review checklist & feedback patterns
+│   ├── troubleshooting.md      # Common errors (symptom → fix)
+│   └── advanced-operations.md  # Revert, undo, conflict, cherry-pick, bisect
 ├── assets/                     # Ready-to-use templates
 │   ├── issue-template-feature.md
 │   ├── issue-template-bug.md
 │   ├── pr-template.md
 │   └── readme-template.md
+├── examples/                   # End-to-end walkthroughs (onboarding)
+│   ├── 01-feature-end-to-end.md
+│   ├── 02-hotfix-production.md
+│   └── 03-conflict-resolution.md
 └── scripts/                    # Helper scripts
     ├── create-issue.sh
     ├── setup-repo.sh
