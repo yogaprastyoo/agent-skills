@@ -1,0 +1,139 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schema/plugin.json",
+  "name": "github-git",
+  "version": "1.1.0",
+  "displayName": "GitHub Git Workflow",
+  "description": "Opinionated Git & GitHub workflow standardization for teams. Enforces conventional commits, branch naming, PR templates, and code review checklists through slash commands and hooks. Auto-triggers on Git/GitHub keywords.",
+  "author": {
+    "name": "Yoga Prastyo",
+    "email": "yogaprastyobayu@gmail.com",
+    "github": "yogaprastyoo"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/yogaprastyoo/agent-skills/tree/develop/github-git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yogaprastyoo/agent-skills.git",
+    "directory": "github-git"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "workflow",
+    "conventional-commits",
+    "pull-requests",
+    "code-review",
+    "hooks",
+    "team-standards"
+  ],
+  "requires": {
+    "git": ">=2.30",
+    "gh": ">=2.0",
+    "claude-code": ">=1.0"
+  },
+  "recommends": {
+    "jq": ">=1.6"
+  },
+  "entry": "SKILL.md",
+  "commands": [
+    {
+      "name": "git-issue",
+      "file": "commands/git-issue.md",
+      "description": "Create a GitHub issue following the team's template"
+    },
+    {
+      "name": "git-commit",
+      "file": "commands/git-commit.md",
+      "description": "Analyze diff, auto-detect type, create a conventional commit"
+    },
+    {
+      "name": "git-pr",
+      "file": "commands/git-pr.md",
+      "description": "Open a PR from the current branch with auto-detected base, title, labels"
+    },
+    {
+      "name": "git-review",
+      "file": "commands/git-review.md",
+      "description": "Review a PR by number/URL using the team checklist; post inline comments"
+    },
+    {
+      "name": "git-setup",
+      "file": "commands/git-setup.md",
+      "description": "Initialize a new repository with team defaults (gitignore, README, branch protection)"
+    }
+  ],
+  "agents": [
+    {
+      "name": "commit-writer",
+      "file": "agents/commit-writer.md",
+      "description": "Focused agent for generating Conventional Commits messages from a diff",
+      "tools": ["Bash", "Read", "Grep"]
+    },
+    {
+      "name": "pr-reviewer",
+      "file": "agents/pr-reviewer.md",
+      "description": "Focused agent for reviewing PRs using the team checklist",
+      "tools": ["Bash", "Read", "Grep"]
+    },
+    {
+      "name": "issue-writer",
+      "file": "agents/issue-writer.md",
+      "description": "Focused agent for turning short descriptions into complete issues",
+      "tools": ["Bash", "Read", "Grep"]
+    }
+  ],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "scripts": [
+          "hooks/guard-push-to-main.sh",
+          "hooks/commit-msg-validator.sh"
+        ],
+        "description": "Blocks direct push to main/master and enforces Conventional Commits on inline -m messages"
+      }
+    ],
+    "gitHooks": {
+      "commit-msg": "hooks/git-hooks/commit-msg",
+      "pre-push": "hooks/git-hooks/pre-push",
+      "installerScript": "scripts/install-git-hooks.sh"
+    }
+  },
+  "references": [
+    { "file": "references/repo-setup.md",            "description": "Initialize repos with best practices" },
+    { "file": "references/issues.md",                "description": "Issue templates and rules" },
+    { "file": "references/issues-api-response.md",   "description": "API Response section for backend endpoint issues" },
+    { "file": "references/branching-commits.md",     "description": "Branch naming and Conventional Commits" },
+    { "file": "references/pull-requests.md",         "description": "PR creation, self-review, merge strategy" },
+    { "file": "references/code-review.md",           "description": "Review checklist and feedback patterns" },
+    { "file": "references/troubleshooting.md",       "description": "Common errors with fixes" },
+    { "file": "references/advanced-operations.md",   "description": "Revert, undo, conflict, cherry-pick, bisect" }
+  ],
+  "assets": [
+    { "file": "assets/issue-template-feature.md", "description": "Feature issue template" },
+    { "file": "assets/issue-template-bug.md",     "description": "Bug report template" },
+    { "file": "assets/pr-template.md",            "description": "PR template" },
+    { "file": "assets/readme-template.md",        "description": "README template for new repos" }
+  ],
+  "scripts": [
+    { "file": "scripts/create-issue.sh",          "description": "Create issue via gh CLI" },
+    { "file": "scripts/setup-repo.sh",            "description": "Initialize a repo non-interactively" },
+    { "file": "scripts/validate-commit-msg.sh",   "description": "Standalone Conventional Commits validator" },
+    { "file": "scripts/install-git-hooks.sh",     "description": "Install git-level hooks into a repo" },
+    { "file": "scripts/verify-install.sh",        "description": "Sanity-check the full skill install" }
+  ],
+  "examples": [
+    { "file": "examples/01-feature-end-to-end.md",     "description": "Full feature flow from issue to merge" },
+    { "file": "examples/02-hotfix-production.md",      "description": "Emergency hotfix to main + backport to develop" },
+    { "file": "examples/03-conflict-resolution.md",    "description": "Step-by-step merge conflict resolution" }
+  ],
+  "cheatsheet": "CHEATSHEET.md",
+  "install": {
+    "skill": "ln -s <repo>/github-git ~/.claude/skills/github-git",
+    "commands": "for cmd in <repo>/github-git/commands/*.md; do ln -sf \"$cmd\" ~/.claude/commands/; done",
+    "hooks": "Merge hooks/settings.example.json into ~/.claude/settings.json",
+    "gitHooks": "cd /path/to/repo && bash <repo>/github-git/scripts/install-git-hooks.sh",
+    "verify": "bash <repo>/github-git/scripts/verify-install.sh"
+  },
+  "changelog": "CHANGELOG.md"
+}

@@ -355,6 +355,32 @@ The 5 commands above are defined as self-contained playbooks in `commands/`. Rea
 
 ---
 
+## Subagents (focused, on-demand)
+
+Three single-purpose agents shipped in `agents/`. Use them via the Agent tool when you want a focused tool-restricted helper without loading the full skill into the conversation. They mirror the slash commands but skip the interactive steps — they take inputs, do the work, return outputs.
+
+| Agent | Use when | Returns |
+|-------|----------|---------|
+| `commit-writer` | You need a Conventional Commits message from a diff | Subject + body (does NOT commit) |
+| `pr-reviewer`   | You need a checklist-driven PR review | Structured findings + recommended verdict (does NOT submit) |
+| `issue-writer`  | You need to turn a short description into a complete issue | Title + label + body (does NOT create) |
+
+Pattern: caller invokes the agent, agent returns content, caller decides what to do with it. Keeps destructive Git actions in the caller's hands.
+
+---
+
+## Examples (end-to-end walkthroughs)
+
+Real-world scenario playbooks in `examples/`. Use these when onboarding teammates or when you want to see the full flow before stitching commands together yourself.
+
+| File | Scenario |
+|------|----------|
+| `examples/01-feature-end-to-end.md` | Full flow: issue → branch → commit → PR → review → merge |
+| `examples/02-hotfix-production.md`  | Emergency hotfix to `main` + backport to `develop` |
+| `examples/03-conflict-resolution.md` | Step-by-step merge conflict walkthrough |
+
+---
+
 ## Hooks (defense-in-depth)
 
 Two layers of automation enforce the workflow even when Claude (or a human) tries to take a shortcut:
