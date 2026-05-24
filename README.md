@@ -11,6 +11,7 @@ Each subdirectory is a self-contained skill that the agent loads on demand. Inst
 | Skill | Status | What it does |
 |-------|--------|--------------|
 | [`github-git`](./github-git/) | ✅ v1.1.0 | Standardize Git/GitHub workflow — issues, branches, conventional commits, PRs, code review |
+| [`implementation-quality`](./implementation-quality/) | ✅ v1.0.0 | Hard quality constraints for every implementation task — code reuse, code quality, efficiency, security, tech-stack compliance |
 
 ### Coming soon
 
@@ -33,7 +34,8 @@ The following skills exist in development and will be published here in upcoming
 git clone https://github.com/yogaprastyoo/agent-skills.git ~/agent-skills
 mkdir -p ~/.claude/skills
 
-ln -s ~/agent-skills/github-git ~/.claude/skills/github-git
+ln -s ~/agent-skills/github-git              ~/.claude/skills/github-git
+ln -s ~/agent-skills/implementation-quality  ~/.claude/skills/implementation-quality
 # ...add more skills here as they become available
 ```
 
@@ -114,13 +116,23 @@ agent-skills/
 ├── LICENSE                     # MIT
 ├── .gitignore
 │
-└── github-git/                 # Skill: Git/GitHub workflow
+├── github-git/                 # Skill: Git/GitHub workflow
+│   ├── SKILL.md
+│   ├── README.md
+│   ├── CHANGELOG.md
+│   ├── commands/               # Slash commands
+│   ├── agents/                 # Focused subagents
+│   ├── hooks/                  # Claude Code + git hooks
+│   ├── references/
+│   ├── assets/
+│   ├── scripts/
+│   └── examples/
+│
+└── implementation-quality/     # Skill: Hard quality constraints
     ├── SKILL.md
     ├── README.md
     ├── CHANGELOG.md
-    ├── references/
-    ├── assets/
-    └── scripts/
+    └── references/
 
 # Additional skills will be added as separate top-level directories
 # in future releases.
