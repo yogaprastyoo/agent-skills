@@ -70,6 +70,27 @@ If the branch lacks an issue number, ask the user to either:
 git fetch origin
 git rebase origin/<base-branch>
 
+# CRITICAL — refuse to proceed if local <base> is ahead of origin/<base>.
+# This prevents silently absorbing unpushed local commits into this PR's
+# squash diff. See references/branching-commits.md → "Silent absorption".
+git checkout <base-branch> >/dev/null 2>&1 || true
+LOCAL_AHEAD=$(git rev-list --count origin/<base-branch>..<base-branch>)
+git checkout <current-branch> >/dev/null
+if [ "$LOCAL_AHEAD" -gt 0 ]; then
+  cat <<EOF
+[git-pr] REFUSED TO PROCEED
+
+Local <base-branch> is $LOCAL_AHEAD commit(s) ahead of origin/<base-branch>.
+Those commits will be silently absorbed into this PR's squash diff if we proceed.
+
+Resolution:
+  1. Surface those local commits via their own PR(s) first
+  2. After they merge, sync this branch: git fetch && git rebase origin/<base-branch>
+  3. Re-run /git-pr
+EOF
+  exit 1
+fi
+
 # Push branch
 git push -u origin <current-branch>
 
@@ -77,6 +98,8 @@ git push -u origin <current-branch>
 ```
 
 If rebase produces conflicts, stop and ask the user to resolve.
+
+If the local-base-ahead check fires, STOP. Do not bypass it without first understanding what the unpushed commits are. They might be experimental work the user forgot about — silently absorbing them into someone else's feature PR is the failure mode that the [PR #12 incident](https://github.com/yogaprastyoo/agent-skills/pull/12) introduced this check.
 
 ### Step 5 — Generate PR body
 
@@ -120,6 +143,7 @@ Next: wait for CI, then request reviewers via `gh pr edit 42 --add-reviewer <use
 - MUST NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" anywhere
 - MUST detect and apply correct base branch — never default to `main` for feature work
 - MUST use `--force-with-lease`, not `--force`, if a rebase requires force-push
+- MUST refuse to push if local `<base-branch>` is ahead of `origin/<base-branch>` (Step 4 check) — prevents silent absorption of unpushed commits
 - Use only default labels (`bug`, `enhancement`, `documentation`) unless custom labels exist
 - Title format: `[Type] description` matching `references/pull-requests.md`
 

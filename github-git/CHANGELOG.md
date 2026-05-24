@@ -9,7 +9,25 @@ and this skill adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
-(no unreleased changes — see [1.1.0] below)
+### Changed
+- `references/branching-commits.md` "Creating a Branch" — now requires branching from `origin/<base>`, not local `<base>`. Recommends `git fetch && git checkout -b <branch> origin/<base>` or two-step with `git pull --ff-only` (which fails loudly if local has unpushed commits).
+- `references/branching-commits.md` "Guidelines" — first item updated to say "Always branch from **`origin/develop`** (not local `develop`)".
+- `commands/git-pr.md` "Pre-PR checklist" — added a MUST-PASS check that refuses to push if local `<base>` is ahead of `origin/<base>`. The check prevents silent absorption of unpushed commits into the PR's squash diff. Constraints section updated to list this requirement.
+
+### Added
+- `references/branching-commits.md` "Gotchas" — new entry **"Silent absorption of unpushed local commits"** documenting the failure mode, symptoms, prevention, and pointing at the PR #12 incident as the concrete example that motivated this rule.
+
+### Retroactive credit
+PR #12 ("[Feature] Add implementation-quality skill v1.0.0", squash `055c5ea`) silently absorbed an additional local commit during the squash-merge:
+
+- Original local SHA: `8fb1fa72d0fff52be1be606c7ea748525c44f03d`
+- Author: Yoga Prastyo <yogaprastyobayu@gmail.com>
+- Message: `chore(skill): support Antigravity agent alongside Claude in github-git constraints`
+- Effect: extended the no-AI-mentions constraints in `SKILL.md`, `commands/*.md`, and `agents/*.md` to also cover Antigravity / Gemini, since the skills folder is shared between Claude Code and Antigravity via symlink chain.
+
+The changes are live in `origin/develop` as part of `055c5ea`; this note acknowledges them as Yoga Prastyo's independent work absorbed by the squash-merge, not as part of the implementation-quality feature. PR #12 description has been updated with the same attribution note.
+
+The new branching rule + pre-PR check (above) prevent this from happening again.
 
 ---
 
