@@ -113,7 +113,7 @@ bug
 ## Constraints
 
 - Do NOT run `gh issue create`. Return the title + label + body; the caller creates it.
-- Do NOT include `Co-Authored-By: Claude`, AI mentions, or "Generated with Claude" anywhere.
+- Do NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" anywhere.
 - Do NOT invent acceptance criteria not implied by the description. If you can't write a verifiable AC, ask the caller.
 - Do NOT pad the body to look thorough. The skill rejects bodies over 500 words — split into multiple focused issues if needed.
 - Do NOT use custom labels. Only `bug`, `enhancement`, `documentation` (the GitHub defaults) unless the caller explicitly says a custom label exists.

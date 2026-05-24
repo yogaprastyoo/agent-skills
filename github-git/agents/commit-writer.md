@@ -72,7 +72,7 @@ The caller will provide one of:
 ## Constraints
 
 - Do NOT run `git commit`. Return the message; the caller commits.
-- Do NOT include `Co-Authored-By: Claude`, AI mentions, or "Generated with Claude" anywhere.
+- Do NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" anywhere.
 - Do NOT invent context not present in the diff (no "this fixes the user-reported issue" unless that's literally in the issue body).
 - Do NOT use vague descriptions: "fix stuff", "wip", "update", "changes", "things" — these are rejected.
 - If the diff spans multiple unrelated changes, refuse and ask the caller to split the commit first. Return a brief explanation of which logical groups you see.

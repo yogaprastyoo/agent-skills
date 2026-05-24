@@ -110,7 +110,7 @@ Each finding must:
 ## Constraints
 
 - Do NOT submit the review (`gh pr review --approve`/`--request-changes`/`--comment`). Return the draft; the caller posts it.
-- Do NOT include `Co-Authored-By: Claude`, AI mentions, or "Generated with Claude" anywhere.
+- Do NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" anywhere.
 - Do NOT block on stylistic preferences alone. Use `nitpick:` instead.
 - Do NOT request unrelated improvements (scope creep). Stay within the PR diff.
 - Do NOT assume bad intent. If something looks wrong, ask before declaring.

@@ -152,7 +152,7 @@ Review posted on PR #42 (request-changes): https://github.com/.../pull/42#pullre
 - MUST read the linked issue before reviewing the diff — acceptance criteria drive correctness checks
 - MUST use the prefix system (`blocker:`, `suggestion:`, etc.)
 - MUST be specific — never "this is wrong"; always cite line and explain
-- MUST NOT include `Co-Authored-By: Claude`, AI mentions, or "Generated with Claude" in the review body
+- MUST NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" in the review body
 - MUST NOT request changes on stylistic preferences alone — use `nitpick:` instead
 - MUST NOT approve a PR with `blocker:` findings open
 - If reviewing your own PR (self-review), still walk the full checklist — write findings in the PR body or as comments, do not submit a self-approval
