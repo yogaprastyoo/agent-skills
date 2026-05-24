@@ -26,6 +26,36 @@ The following skills exist in development and will be published here in upcoming
 
 ---
 
+## Compatibility
+
+These skills support **four** AI coding agents:
+
+| Agent | Mechanism | Install method |
+|-------|-----------|----------------|
+| **Claude Code** (Anthropic) | Native — reads `SKILL.md` | Symlink into `~/.claude/skills/` |
+| **Antigravity CLI** (Gemini) | Native — same `SKILL.md` format | Symlink into `~/.gemini/antigravity/skills/` (can share folder with Claude Code via further symlink) |
+| **GPT Codex CLI** (OpenAI) | Reads `AGENTS.md` at project root | Generate via `scripts/export-to-agent.sh codex` |
+| **OpenCode** (open-source) | Reads `AGENTS.md` at project root | Generate via `scripts/export-to-agent.sh opencode` |
+
+For Codex / OpenCode, the export script produces a single self-contained `AGENTS.md` that inlines the SKILL.md content plus all references — no symlinks required at the project level:
+
+```bash
+cd /path/to/your/project
+bash ~/agent-skills/scripts/export-to-agent.sh codex github-git implementation-quality > AGENTS.md
+```
+
+Regenerate after pulling skill updates:
+
+```bash
+cd ~/agent-skills && git pull
+cd /path/to/your/project
+bash ~/agent-skills/scripts/export-to-agent.sh codex github-git implementation-quality > AGENTS.md
+```
+
+For Claude Code / Antigravity, follow the Install section below.
+
+---
+
 ## Install
 
 ### Option A — Symlink individual skills (recommended)
@@ -116,16 +146,19 @@ agent-skills/
 ├── LICENSE                     # MIT
 ├── .gitignore
 │
+├── scripts/                    # Repo-level tooling (cross-skill)
+│   └── export-to-agent.sh      # Generate AGENTS.md for Codex / OpenCode
+│
 ├── github-git/                 # Skill: Git/GitHub workflow
 │   ├── SKILL.md
 │   ├── README.md
 │   ├── CHANGELOG.md
-│   ├── commands/               # Slash commands
+│   ├── commands/               # Slash commands (Claude Code)
 │   ├── agents/                 # Focused subagents
 │   ├── hooks/                  # Claude Code + git hooks
 │   ├── references/
 │   ├── assets/
-│   ├── scripts/
+│   ├── scripts/                # Skill-level scripts (install, verify)
 │   └── examples/
 │
 └── implementation-quality/     # Skill: Hard quality constraints

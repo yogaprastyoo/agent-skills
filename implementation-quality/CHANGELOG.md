@@ -9,7 +9,8 @@ and this skill adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
-(no unreleased changes — see [1.0.0] below)
+### Added
+- README "Compatibility" section explaining cross-agent support (Claude Code, Antigravity CLI, GPT Codex CLI, OpenCode). Links to the root `scripts/export-to-agent.sh` for non-native agents.
 
 ---
 
