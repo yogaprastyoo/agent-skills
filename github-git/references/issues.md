@@ -58,8 +58,8 @@ Include the user-facing impact or security implication if applicable.]
 ## API Response
 
 <!-- REQUIRED for backend endpoint issues — omit for mobile, UI/UX, or test-only issues.
-Follow the api-response skill format (~/.agents/skills/api-response/SKILL.md).
-Include one example per endpoint: success + all relevant errors.
+See references/issues-api-response.md for the full rules: envelope shape,
+per-endpoint structure, pagination, project-specific overrides.
 Place this section between Context and Acceptance Criteria. -->
 
 [For each endpoint, show request + success response + all error responses.

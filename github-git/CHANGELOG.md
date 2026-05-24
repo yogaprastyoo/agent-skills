@@ -30,10 +30,24 @@ and this skill adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 - "Hooks (defense-in-depth)" section in `SKILL.md`
 - Structure tree in README extended with `hooks/`, `install-git-hooks.sh`, `verify-install.sh`
 
+### Added (Sprint 4)
+- `references/troubleshooting.md` — common errors (tool install, auth, push/sync, merge conflicts, commits, .gitignore, hooks). Symptom → Cause → Fix → Prevention per entry.
+- `references/advanced-operations.md` — revert merged PR, undo last commit (pre/post push), resolve merge conflict, sync fork, split commit, cherry-pick, interactive rebase, recover lost commit, git bisect, branch deletion, nuclear option
+- `references/issues-api-response.md` — extracted API Response rules from `SKILL.md`. Single source of truth for envelope shape, per-endpoint structure, pagination, project-specific overrides
+- "Reference Files" table in `SKILL.md` extended with `troubleshooting.md`, `advanced-operations.md`, `issues-api-response.md`
+
+### Changed (Sprint 4)
+- `SKILL.md` "API Response in Issues" section is now a short summary that links to `references/issues-api-response.md` (was 20+ lines inline)
+- `references/issues.md` API Response section comment points at `issues-api-response.md` for the full rules
+- Asset templates enriched and synced with reference files:
+  - `assets/pr-template.md` — adds "Testing Performed", "Notes for Reviewers"; expands "Self-Review Checklist" to match `references/code-review.md`; adds "Performance improvement" type
+  - `assets/issue-template-bug.md` — adds "Environment", "Frequency", "Severity" sections (standard bug-report fields)
+  - `assets/issue-template-feature.md` — adds inline API Response example using the new envelope, "Dependencies", "Definition of Done" sections
+
 ### Planned
-- References: `troubleshooting.md`, `advanced-operations.md`
 - Custom subagents: `commit-writer`, `pr-reviewer`, `issue-writer`
 - Example walkthroughs and cheatsheet
+- `plugin.json` manifest for formal distribution
 
 ---
 

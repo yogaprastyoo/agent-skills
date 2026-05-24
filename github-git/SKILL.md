@@ -247,26 +247,18 @@ These are things that frequently go wrong — read before starting:
 
 ## API Response in Issues — Mandatory
 
-When creating an issue for a backend endpoint (any endpoint that returns a response), the issue body MUST include an `## API Response` section with request and response examples.
+When creating an issue for a backend endpoint (one that returns a response body), the issue body MUST include an `## API Response` section with request and full response examples (success + every relevant error).
 
-All examples MUST follow the `api-response` skill (`~/.agents/skills/api-response/SKILL.md`):
+The detailed rules — envelope shape, per-endpoint structure, pagination, project-specific overrides — live in [`references/issues-api-response.md`](references/issues-api-response.md). Read that file before generating any issue for a backend endpoint.
+
+Summary of the envelope (full spec in the reference):
 
 ```json
-// Success
-{ "success": true, "message": "...", "data": {} }
-
-// Error
-{ "success": false, "message": "...", "errors": null }
+{ "success": true,  "message": "...", "data":   {} }    // success
+{ "success": false, "message": "...", "errors": null }  // error
 ```
 
-Rules:
-- Include one example per endpoint in the issue
-- Show both success and all relevant error responses
-- For list endpoints, include `pagination` inside `data`
-- Do NOT invent custom response formats — always follow the api-response skill
-- Place `## API Response` section between `## Context` and `## Acceptance Criteria`
-
-If the project has project-specific additions to the response format (e.g. a `code` field for auth), check the project's Technical Document first before writing the response examples.
+Place the `## API Response` section between `## Context` and `## Acceptance Criteria` in the issue body.
 
 ## PR and Issue Descriptions — Strict Rules
 
@@ -386,9 +378,12 @@ Read the appropriate reference file based on the task:
 |------|---------------|
 | Setting up a new repository | `references/repo-setup.md` |
 | Creating and managing issues | `references/issues.md` |
+| API Response section for backend endpoint issues | `references/issues-api-response.md` |
 | Branching strategy & commits | `references/branching-commits.md` |
 | Creating pull requests | `references/pull-requests.md` |
 | Reviewing code | `references/code-review.md` |
+| Common errors (symptom → fix) | `references/troubleshooting.md` |
+| Advanced ops (revert, undo, conflict, cherry-pick, bisect) | `references/advanced-operations.md` |
 
 ## Asset Templates
 
