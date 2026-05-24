@@ -117,7 +117,7 @@ Next: wait for CI, then request reviewers via `gh pr edit 42 --add-reviewer <use
 
 - MUST link PR to an issue via `Closes #N` — refuse to create PR-without-issue unless the user explicitly overrides
 - MUST use heredoc with single-quoted `'EOF'`
-- MUST NOT include `Co-Authored-By: Claude`, AI mentions, or "Generated with Claude" anywhere
+- MUST NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" anywhere
 - MUST detect and apply correct base branch — never default to `main` for feature work
 - MUST use `--force-with-lease`, not `--force`, if a rebase requires force-push
 - Use only default labels (`bug`, `enhancement`, `documentation`) unless custom labels exist

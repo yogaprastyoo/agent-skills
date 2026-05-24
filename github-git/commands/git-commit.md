@@ -137,7 +137,7 @@ If no → ask user what to change.
 - MUST refuse commits on `develop`, `main`, or any protected branch
 - MUST use conventional commits format
 - MUST use single-quoted `'EOF'` heredoc for multi-line messages
-- MUST NOT include `Co-Authored-By: Claude`, AI mentions, or "Generated with Claude"
+- MUST NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity"
 - MUST NOT auto-stage with `git add .` — ask the user
 - MUST NOT amend an existing commit unless user explicitly asks
 - MUST reject vague descriptions ("fix stuff", "update", "wip")

@@ -105,7 +105,7 @@ Or invoke nothing — let the user decide.
 
 - MUST follow `references/issues.md` template — no shortcuts
 - MUST use single-quoted `'EOF'` heredoc
-- MUST NOT include `Co-Authored-By: Claude`, AI mentions, or "Generated with Claude" anywhere in the issue
+- MUST NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" anywhere in the issue
 - MUST verify `gh auth status` first
 - MUST detect duplicate issues: `gh issue list --search "<keywords>"` before creating
 - Title format: `type: short description` (lowercase, no period)

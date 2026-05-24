@@ -264,8 +264,10 @@ Place the `## API Response` section between `## Context` and `## Acceptance Crit
 
 NEVER include any of the following in PR body, issue body, commit messages, or any GitHub content:
 - `🤖 Generated with Claude Code`
+- `🤖 Generated with Antigravity`
 - `Co-Authored-By: Claude`
-- Any mention of Claude, AI, or automation tools
+- `Co-Authored-By: Antigravity`
+- Any mention of Claude, Antigravity, Gemini, AI, or automation tools
 
 This applies to **all** Git and GitHub output: commit messages, PR titles, PR bodies, issue bodies, comments, and release notes.
 
@@ -383,16 +385,16 @@ Real-world scenario playbooks in `examples/`. Use these when onboarding teammate
 
 ## Hooks (defense-in-depth)
 
-Two layers of automation enforce the workflow even when Claude (or a human) tries to take a shortcut:
+Two layers of automation enforce the workflow even when Claude/Antigravity (or a human) tries to take a shortcut:
 
 | Layer | Where | What it catches |
 |-------|-------|-----------------|
-| **Claude Code hooks** (in `hooks/`) | PreToolUse on Bash | Direct push to `main`/`master`, malformed commit messages from `git commit -m` |
+| **Claude/Antigravity hooks** (in `hooks/`) | PreToolUse on Bash | Direct push to `main`/`master`, malformed commit messages from `git commit -m` |
 | **Git hooks** (in `hooks/git-hooks/`) | `commit-msg`, `pre-push` per repo | Any commit/push via plain `git` (terminal, IDE, other tools) |
 
 Both layers are optional but recommended. See [`hooks/README.md`](hooks/README.md) for install steps and the exact rules each hook enforces.
 
-When the user (or Claude) hits a hook block, the hook prints the reason to stderr and explains how to fix it. Do not suggest `--no-verify` unless the situation truly warrants it.
+When the user (or Claude/Antigravity) hits a hook block, the hook prints the reason to stderr and explains how to fix it. Do not suggest `--no-verify` unless the situation truly warrants it.
 
 ---
 

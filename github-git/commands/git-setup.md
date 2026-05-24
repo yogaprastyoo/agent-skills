@@ -164,7 +164,7 @@ Next steps:
 - MUST set `develop` as the default branch
 - MUST NOT skip the branch protection question (just don't apply if user opts out)
 - MUST use the assets templates — do not invent README/LICENSE content
-- MUST NOT include `Co-Authored-By: Claude`, AI mentions, or "Generated with Claude" in any generated file
+- MUST NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" in any generated file
 - MUST verify repo doesn't exist before creating
 - MUST use HTTPS remote, not SSH, unless the user explicitly asks (matches the gh CLI default)
 - Initial commit message follows conventional commits (`chore: initial project setup`)
