@@ -8,15 +8,9 @@ Apply label: enhancement.
 ## Description
 
 <!-- What needs to be built and why? 2–5 sentences explaining the task and its impact.
-Lead with the business/user motivation, not the technical implementation. -->
-
-## Scope
-
-<!-- What is included and what is NOT included in this task.
-Be explicit — this prevents over-engineering and keeps the PR focused.
-Example:
-- IN: add pagination to the task list endpoint (page, pageSize, total, totalPages)
-- OUT: do not change the response structure of individual tasks, do not add sorting or filtering -->
+Lead with the business/user motivation, not the technical implementation.
+Include what is IN scope in the last sentence (e.g. "This issue covers X, Y, and Z.").
+Do NOT add a ## Scope section — OUT of scope belongs in Technical Notes. -->
 
 ## Context
 
@@ -69,18 +63,9 @@ Check the project Technical Document for project-specific additions (e.g. auth `
 - [ ] Include a test coverage requirement
 - [ ] Documentation updated where applicable
 
-## Definition of Done
-
-<!-- Optional but recommended for non-trivial features.
-A binary check: either we did this, or we didn't.
-- [ ] Code reviewed and merged into develop
-- [ ] All tests pass in CI
-- [ ] Documentation updated (README, CHANGELOG, JSDoc, API spec)
-- [ ] Manual smoke test against staging passes
-- [ ] No new lint or type errors -->
-
 ## Technical Notes
 
-<!-- Constraints, edge cases, suggested implementation approach,
-or anything that would surprise a reader unfamiliar with this area.
-Required if the implementation is non-obvious or involves an external system. -->
+<!-- Constraints, edge cases, what is explicitly OUT of scope, and anything that would
+surprise a reader unfamiliar with this area. Required if the implementation is non-obvious
+or involves an external system.
+Do NOT write step-by-step implementation instructions or paste full file content here. -->

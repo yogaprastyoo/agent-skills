@@ -48,7 +48,7 @@ gh pr view <pr-number>
 gh pr diff <pr-number>
 
 # Changed files (for scope assessment)
-gh pr diff <pr-number> --stat
+gh pr diff <pr-number> --name-only
 
 # Linked issue
 ISSUE_NUM=$(gh pr view <pr-number> --json body --jq '.body' | grep -oE 'Closes #[0-9]+' | head -1 | grep -oE '[0-9]+')
@@ -114,10 +114,11 @@ Show the user the full draft. Ask for confirmation and verdict:
 
 ### Step 9 — Post the review
 
+Write the body to a temp file first, then pass via `--body-file` to avoid shell-escaping issues:
+
 ```bash
-gh pr review <pr-number> \
-  --<verdict> \
-  --body "$(cat <<'EOF'
+mkdir -p /tmp/claude
+cat <<'EOF' > /tmp/claude/review-body.md
 ## Summary
 
 ...
@@ -134,7 +135,12 @@ gh pr review <pr-number> \
 
 ...
 EOF
-)"
+
+gh pr review <pr-number> \
+  --<verdict> \
+  --body-file /tmp/claude/review-body.md
+
+rm /tmp/claude/review-body.md
 ```
 
 For inline comments on specific lines, use `gh api` with the review endpoint, or paste them into the review body with `path:line` references.

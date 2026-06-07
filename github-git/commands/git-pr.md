@@ -113,16 +113,44 @@ Read `~/.claude/skills/github-git/references/pull-requests.md` for the full temp
 
 ### Step 6 — Create the PR
 
+Write the body to a temp file first to avoid shell-escaping issues, then pass via `--body-file`:
+
 ```bash
+mkdir -p /tmp/claude
+cat <<'EOF' > /tmp/claude/pr-body.md
+## Description
+
+...
+
+## Changes
+
+- ...
+
+## Related Issues
+
+Closes #<number>
+
+## Type of Change
+
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Refactor
+- [ ] Documentation
+
+## Self-Review Checklist
+
+- [ ] Tests pass
+- [ ] No dead code
+EOF
+
 gh pr create \
   --base <detected-base> \
   --title "[Type] <issue title>" \
-  --body "$(cat <<'EOF'
-...body...
-EOF
-)" \
+  --body-file /tmp/claude/pr-body.md \
   --label "<detected-label>" \
   --assignee "@me"
+
+rm /tmp/claude/pr-body.md
 ```
 
 Add `--draft` if `$ARGUMENTS` contains `--draft`.
@@ -139,7 +167,7 @@ Next: wait for CI, then request reviewers via `gh pr edit 42 --add-reviewer <use
 ## Constraints
 
 - MUST link PR to an issue via `Closes #N` — refuse to create PR-without-issue unless the user explicitly overrides
-- MUST use heredoc with single-quoted `'EOF'`
+- MUST write body to `/tmp/claude/pr-body.md` and use `--body-file` — never inline `--body "$(cat <<'EOF'...)"` to avoid shell-escaping issues
 - MUST NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" anywhere
 - MUST detect and apply correct base branch — never default to `main` for feature work
 - MUST use `--force-with-lease`, not `--force`, if a rebase requires force-push

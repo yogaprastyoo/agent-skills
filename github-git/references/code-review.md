@@ -44,7 +44,7 @@ If the PR lacks a description or linked issue, request it before reviewing.
 gh pr diff <pr-number>
 
 # View changed files list
-gh pr diff <pr-number> --stat
+gh pr diff <pr-number> --name-only
 ```
 
 ### Via browser

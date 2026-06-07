@@ -12,7 +12,7 @@ Create a GitHub issue that follows the github-git skill's required template.
 1. Parses `$ARGUMENTS` as a hint for type and title — accepts plain text or conventional prefix (`feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`)
 2. Asks the user (in Indonesian) for any missing pieces: type, title, description, context, acceptance criteria
 3. Detects whether this issue is for a backend endpoint and, if so, requires the `## API Response` section
-4. Generates the full issue body via heredoc following `~/.claude/skills/github-git/references/issues.md`
+4. Generates the full issue body, writes to `/tmp/claude/issue-body.md`, then creates via `--body-file` following `~/.claude/skills/github-git/references/issues.md`
 5. Creates the issue with `gh issue create`
 6. Reports the issue URL and the recommended branch name
 
@@ -71,10 +71,11 @@ Ask for each section concisely. Do not invent content the user did not provide.
 
 ### Step 6 — Generate and create
 
-Use heredoc with single-quoted `'EOF'` to prevent shell expansion:
+Write the body to a temp file first, then pass via `--body-file` to avoid shell-escaping issues:
 
 ```bash
-gh issue create --title "type: <description>" --body "$(cat <<'EOF'
+mkdir -p /tmp/claude
+cat <<'EOF' > /tmp/claude/issue-body.md
 ## Description
 
 ...
@@ -87,7 +88,13 @@ gh issue create --title "type: <description>" --body "$(cat <<'EOF'
 
 - [ ] ...
 EOF
-)" --label "enhancement"
+
+gh issue create \
+  --title "type: <description>" \
+  --body-file /tmp/claude/issue-body.md \
+  --label "enhancement"
+
+rm /tmp/claude/issue-body.md
 ```
 
 ### Step 7 — Report and suggest next step
@@ -104,10 +111,12 @@ Or invoke nothing — let the user decide.
 ## Constraints
 
 - MUST follow `references/issues.md` template — no shortcuts
-- MUST use single-quoted `'EOF'` heredoc
+- MUST write body to `/tmp/claude/issue-body.md` and use `--body-file` — never inline `--body "$(cat <<'EOF'...)"` to avoid shell-escaping issues
 - MUST NOT include `Co-Authored-By: Claude`, `Co-Authored-By: Antigravity`, AI mentions, or "Generated with Claude" / "Generated with Antigravity" anywhere in the issue
 - MUST verify `gh auth status` first
 - MUST detect duplicate issues: `gh issue list --search "<keywords>"` before creating
+- MUST NOT write step-by-step implementation instructions, full file content, or code blocks as the primary issue body — issues define WHAT, not HOW
+- MUST NOT create a `## Scope` section — IN scope belongs in the last sentence of Description, OUT of scope belongs in Technical Notes
 - Title format: `type: short description` (lowercase, no period)
 - Use only default GitHub labels (`bug`, `enhancement`, `documentation`) unless custom labels were created with `gh label create`
 

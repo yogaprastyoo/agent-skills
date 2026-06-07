@@ -86,6 +86,8 @@ or anything that would surprise a reader unfamiliar with this area.]
 - **Acceptance criteria must be checkboxes** (`- [ ]`). Each item must be independently verifiable.
 - **No vague criteria.** "Works correctly" is not a criterion. "Returns 200 and clears `app_session` cookie" is a criterion.
 - **Technical Notes is required** whenever the fix is non-obvious, has constraints, or requires knowledge of an external system (e.g. Laravel Sanctum behavior).
+- **NEVER include step-by-step implementation instructions, full file content, or code blocks as the primary body of an issue.** Issues define WHAT to achieve — not HOW to implement it. If the body contains more code than prose, it is a specification document, not an issue. Remove the code; trust the developer or AI agent to implement.
+- **Do NOT use a `## Scope` section.** What is IN scope belongs in the last sentence of Description. What is OUT of scope belongs in Technical Notes.
 - Keep body under 500 words. If you need more, split into multiple issues.
 
 ---
